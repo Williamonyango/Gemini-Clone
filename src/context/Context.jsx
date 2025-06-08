@@ -11,13 +11,22 @@ export const ContextProvider = (props) => {
   const [showResult, setShowResult] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState("");
+  const [displayedText, setDisplayedText] = useState("");
 
   const onSend = async (prompt) => {
     setResultData("");
     setLoading(true);
     setShowResult(true);
-    setRecentPrompt(input);
-    const response = await Message(input);
+    let response;
+    if (prompt !== undefined) {
+      response = await Message(prompt);
+      setRecentPrompt(prompt);
+    } else {
+      setPreviousPrompts((prev) => [...prev, input]);
+      response = await Message(input);
+      setRecentPrompt(input);
+    }
+
     setResultData(response);
     setLoading(false);
     setInput("");
@@ -37,6 +46,8 @@ export const ContextProvider = (props) => {
     resultData,
     setResultData,
     onSend,
+    displayedText,
+    setDisplayedText,
   };
 
   return (

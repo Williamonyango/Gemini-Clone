@@ -1,7 +1,8 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import "./Main.css";
 import { assets } from "../../assets/assets";
 import { Context } from "../../context/Context";
+import ReactMarkdown from "react-markdown";
 
 const Main = () => {
   const {
@@ -12,22 +13,42 @@ const Main = () => {
     showResult,
     loading,
     resultData,
+    displayedText,
+    setDisplayedText,
   } = useContext(Context);
-  const [selectedFile, setSelectedFile] = useState(null); // File state
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
 
-  // Trigger file selection
   const handleFileIconClick = () => {
     fileInputRef.current.click();
   };
 
-  // Save the file in state (do not send yet)
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
     }
   };
+
+  useEffect(() => {
+    if (loading) {
+      setDisplayedText("");
+      return;
+    }
+
+    const words = resultData.split(" ");
+    let currentIndex = 0;
+
+    const interval = setInterval(() => {
+      currentIndex++;
+      setDisplayedText(words.slice(0, currentIndex).join(" "));
+      if (currentIndex >= words.length) {
+        clearInterval(interval);
+      }
+    }, 20);
+
+    return () => clearInterval(interval);
+  }, [resultData, loading]);
 
   return (
     <div className="main">
@@ -80,7 +101,9 @@ const Main = () => {
                   <hr />
                 </div>
               ) : (
-                <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
+                <div className="result-text">
+                  <ReactMarkdown>{displayedText}</ReactMarkdown>
+                </div>
               )}
             </div>
           </div>
