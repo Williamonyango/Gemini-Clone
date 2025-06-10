@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Message } from "../config/Gemini";
+import { Message, FileUpload } from "../config/Gemini";
 import React, { useState } from "react";
 
 export const Context = createContext();
@@ -12,19 +12,25 @@ export const ContextProvider = (props) => {
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState("");
   const [displayedText, setDisplayedText] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const onSend = async (prompt) => {
     setResultData("");
     setLoading(true);
     setShowResult(true);
     let response;
-    if (prompt !== undefined) {
-      response = await Message(prompt);
-      setRecentPrompt(prompt);
+    if (selectedFile) {
+      response = await FileUpload(input, selectedFile);
+      setSelectedFile(null);
     } else {
-      setPreviousPrompts((prev) => [...prev, input]);
-      response = await Message(input);
-      setRecentPrompt(input);
+      if (prompt !== undefined) {
+        response = await Message(prompt);
+        setRecentPrompt(prompt);
+      } else {
+        setPreviousPrompts((prev) => [...prev, input]);
+        response = await Message(input);
+        setRecentPrompt(input);
+      }
     }
 
     setResultData(response);
@@ -47,6 +53,8 @@ export const ContextProvider = (props) => {
     setResultData,
     onSend,
     displayedText,
+    selectedFile,
+    setSelectedFile,
     setDisplayedText,
   };
 

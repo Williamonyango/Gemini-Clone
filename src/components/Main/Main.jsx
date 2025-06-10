@@ -15,8 +15,8 @@ const Main = () => {
     resultData,
     displayedText,
     setDisplayedText,
+    setSelectedFile,
   } = useContext(Context);
-  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
 
   const handleFileIconClick = () => {
