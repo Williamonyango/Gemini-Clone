@@ -10,12 +10,10 @@ export const Message = async (prompt) => {
     model: "gemini-2.0-flash",
     contents: prompt,
   });
-  console.log(response.text);
   return response.text;
 };
 
 export const FileUpload = async (prompt, selectedFile) => {
-  console.log("file:", selectedFile);
   try {
     const { type, base64 } = await convertFileToBase64(selectedFile);
 
@@ -28,7 +26,6 @@ export const FileUpload = async (prompt, selectedFile) => {
         },
       },
     ];
-    // console.log("contents:", contents);
 
     const result = await ai.models.generateContent({
       model: "gemini-1.5-flash",
@@ -38,7 +35,7 @@ export const FileUpload = async (prompt, selectedFile) => {
     const text =
       result?.candidates?.[0]?.content?.parts?.[0]?.text ||
       "No summary available.";
-    // console.log("result:", result);
+
     return text;
   } catch (error) {
     console.error("Error processing file:", error);
