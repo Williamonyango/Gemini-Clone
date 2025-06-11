@@ -20,8 +20,11 @@ export const ContextProvider = (props) => {
     setShowResult(true);
     let response;
     if (selectedFile) {
+      setRecentPrompt(input);
       response = await FileUpload(input, selectedFile);
       setSelectedFile(null);
+
+      setPreviousPrompts((prev) => [...prev, input]);
     } else {
       if (prompt !== undefined) {
         response = await Message(prompt);

@@ -15,7 +15,7 @@ export const Message = async (prompt) => {
 
 export const FileUpload = async (prompt, selectedFile) => {
   try {
-    const { type, base64 } = await convertFileToBase64(selectedFile);
+    const { type, base64, imageUrl } = await convertFileToBase64(selectedFile);
 
     const contents = [
       { text: prompt },

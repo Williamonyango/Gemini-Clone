@@ -6,6 +6,7 @@ export const convertFileToBase64 = async (file) => {
   return {
     type: file.type,
     base64: Buffer.from(arrayBuffer).toString("base64"),
+    imageUrl: URL.createObjectURL(file),
   };
 };
 
